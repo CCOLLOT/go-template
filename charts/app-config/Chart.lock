@@ -1,0 +1,6 @@
+dependencies:
+- name: generic-app
+  repository: file://charts/generic-app
+  version: 0.1.0
+digest: sha256:ff44b8689e59f95198130f49c776210d115dc8c490f01be7f87de5cdc7317948
+generated: "2023-10-21T11:47:12.385316+02:00"
