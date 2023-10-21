@@ -3,7 +3,7 @@ name: Build app + Create and publish docker image
 on:
   push:
     tags-ignore:
-      - "init"
+      - "nobuild-*"
     paths-ignore:
       - ".github/**"
       - "**.md"
