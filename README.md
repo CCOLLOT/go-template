@@ -1,3 +1,13 @@
-# go-template
+### Go application appnametochange repository
 
-### Go application default repository
+
+### Architecture
+
+### Definitions
+
+### Getting Started
+
+### Running Tests
+
+### Roadmap
+
