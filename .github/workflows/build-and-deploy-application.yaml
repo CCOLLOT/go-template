@@ -2,6 +2,8 @@ name: Build app + Create and publish docker image
 # 1. Create docker image and push it to some container registry
 on:
   push:
+    branches:
+      - "main"
     tags-ignore:
       - "nobuild-*"
     paths-ignore:
