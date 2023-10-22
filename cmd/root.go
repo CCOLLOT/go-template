@@ -2,19 +2,21 @@ package cmd
 
 import (
 	"fmt"
-	"time"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 
+	"github.com/CCOLLOT/appnametochange/internal/app"
+	"github.com/CCOLLOT/appnametochange/internal/logger"
 	"github.com/spf13/cobra"
 )
 
-const (
-	MESSAGE = "This application is running version 1"
-)
-
-var (
-	debug          bool
-	configFilePath string
-)
+type GracefulService interface {
+	Name() string
+	Start() error
+	Shutdown() error
+}
 
 func InitAndRunCommand() error {
 	rootCmd := &cobra.Command{
@@ -32,12 +34,43 @@ func InitAndRunCommand() error {
 	return rootCmd.Execute()
 }
 
-func Run() error{
-	ticker := time.NewTicker(2 * time.Second)
-	for {
-		select {
-		case t := <-ticker.C:
-			fmt.Println(fmt.Sprintf("%s-%s", t, MESSAGE))
-		}
+func Run() error {
+	log, err := logger.New()
+	if err != nil {
+		return err
 	}
+	services := []GracefulService{}
+	app, err := app.New(log)
+	if err != nil {
+		return err
+	}
+	go app.Start()
+
+	services = append(services, app)
+
+	waitGracefulShutdown := make(chan any)
+	var wg sync.WaitGroup
+	go func() {
+		s := make(chan os.Signal, 1)
+		signal.Notify(s, syscall.SIGINT, syscall.SIGTERM)
+		<-s
+		for _, svc := range services {
+			wg.Add(1)
+			go func(svc GracefulService) {
+				defer wg.Done()
+				fmt.Println(fmt.Sprintf("gracefully shutting down %s...", svc.Name()))
+				err := svc.Shutdown()
+				if err != nil {
+					fmt.Println(fmt.Sprintf("failed to gracefully shut down %s, err: %s", svc.Name(), err.Error()))
+					return
+				}
+				fmt.Println(fmt.Sprintf("successfully shut down %s", svc.Name()))
+				fmt.Println("bye.")
+			}(svc)
+		}
+		wg.Wait()
+		close(waitGracefulShutdown)
+	}()
+	<-waitGracefulShutdown
+	return nil
 }

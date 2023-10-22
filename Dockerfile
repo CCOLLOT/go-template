@@ -12,5 +12,5 @@ USER 1000
 WORKDIR ${HOME}/app
 COPY --from=builder /app/appnametochange .
 EXPOSE 8080
-ENTRYPOINT ["./app/appnametochange"]
+ENTRYPOINT ["./appnametochange"]
 CMD ["start"]
