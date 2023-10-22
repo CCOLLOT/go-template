@@ -1,4 +1,6 @@
 appnametochange:
+  language: "go"
+  team: "Platform"
   image:
     repository: ghcr.io/ccollot/appnametochange
     pullPolicy: IfNotPresent
