@@ -35,8 +35,6 @@ Common labels
 */}}
 {{- define "generic-app.labels" -}}
 helm.sh/chart: {{ include "generic-app.chart" . }}
-language: {{ .Values.language}}
-team: {{ .Values.team}}
 {{ include "generic-app.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

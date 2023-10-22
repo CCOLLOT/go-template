@@ -19,6 +19,8 @@ spec:
       {{- end }}
       labels:
         {{- include "generic-app.selectorLabels" . | nindent 8 }}
+        language: {{ .Values.language }}
+        team: {{ .Values.team }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
