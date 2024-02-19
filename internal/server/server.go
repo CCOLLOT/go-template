@@ -16,12 +16,12 @@ type HTTPServer struct {
 
 func New(log *zap.Logger) (*HTTPServer, error) {
 	eng := gin.New()
-	addr := fmt.Sprintf("%s:%d", "0.0.0.0", 8080)
+	addr := fmt.Sprintf("%s:%d", "0.0.0.0", 3000)
 	return &HTTPServer{
 		Log:    log,
 		Engine: eng,
 		Server: &http.Server{
-			Addr: addr,
+			Addr:    addr,
 			Handler: eng,
 		},
 	}, nil
